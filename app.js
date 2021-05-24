@@ -1,21 +1,26 @@
 // Model
 let playerTurn = 'X';
-let box = document.getElementsByClassName('box');
+// let box = document.getElementsByClassName('box');
 
 const changePlayer = () => {
   playerTurn = playerTurn === 'X' ? 'O' : 'X';
   console.log(playerTurn)
 ;}
-console.log(box);
+// console.log(box);
 console.log(playerTurn);
 
 // Controller (Event Handlers)
 const displaySymbol = (e) => {
-  if (!e.target.innerText.length) {
+  const OPTIONS = ['X', 'Y'];
+  if (!OPTIONS.includes(e.target.innerText)) {
     e.target.innerText = playerTurn;
     changePlayer(playerTurn);
   }
 }
 
 // View (Event Listeners)
-box.addEventListener('click', displaySymbol);
+document.addEventListener('click', (e) => {
+  if (e.target.matches('.box')) {
+    displaySymbol(e);
+  }
+});
