@@ -1,0 +1,52 @@
+body {
+  background: linear-gradient(45deg, #e66465, #9198e5);
+  height: 1vh;
+}
+
+#app, #board, #reset {
+  margin: auto;
+}
+
+#app {
+  text-align: center;
+}
+
+#board {
+  border-collapse: collapse;
+  margin-bottom: 4em;
+  margin-top: 4em;
+}
+
+#reset, .box {
+  cursor: pointer;
+}
+
+#reset {
+  border-radius: 5px;
+  padding: 1em 5em;
+}
+
+#reset:hover {
+  background-color: gray;
+  color: white;
+}
+
+.row {
+  border-bottom: 1px solid black;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.box {
+  border-right: 1px solid black;
+  height: 100px;
+  text-align: center;
+  width: 100px;
+}
+
+.box:last-child {
+  border-right: none;
+}
+
