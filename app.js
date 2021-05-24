@@ -4,6 +4,8 @@ const reset = document.querySelector('#reset');
 const spaces = document.querySelectorAll('.box');
 const xScore = document.querySelector('#x-score');
 const oScore = document.querySelector('#o-score');
+const xName = document.querySelector('#x-name');
+const oName = document.querySelector('#o-name');
 const player = document.querySelector('#player');
 
 // Game state parameters
@@ -40,11 +42,11 @@ const changePlayer = () => {
 
 const updateMessage = () => {
   if (turn.winner) {
-    message.innerHTML = `Game Over. ${turn.winner} wins!`;
+    message.innerHTML = `Game Over. ${turn.winner === 'X' ? playerOne : playerTwo} wins!`;
   } else if (turn.numPlays === 9) {
     message.innerHTML = 'Game Over. It\'s a tie.';
   } else {
-    player.innerText = turn.player;
+    player.innerText = turn.player === 'X' ? playerOne : playerTwo;
   }
 }
 
@@ -129,10 +131,18 @@ const resetGameState = () => {
   spaces.forEach(space => space.innerText = '');
   document.addEventListener('click', checkBoardClick);
   reset.innerText = 'Reset Game';
-  message.innerHTML = `<span id='player'>${turn.start}</span>'s turn. Choose a space.`;
+  message.innerHTML = `<span id='player'>${turn.start === 'X' ? playerOne : playerTwo}</span>'s turn. Choose a space.`;
 }
 
-// View (Event Listeners)
-document.addEventListener('click', checkBoardClick);
-reset.addEventListener('click', resetGameState);
+// View (Event Listeners and player names)
+window.addEventListener('DOMContentLoaded', (e) => {
+  document.addEventListener('click', checkBoardClick);
+  reset.addEventListener('click', resetGameState);
+})
 
+// Get and Set PlayerNames
+const playerOne = window.prompt('Player One (X), Please Enter Your Name: ') || 'X';
+const playerTwo = window.prompt('Player Two (O), Please Enter Your Name: ') || 'O';
+xName.innerText = playerOne;
+oName.innerText = playerTwo;
+player.innerText = playerOne;
