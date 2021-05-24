@@ -7,7 +7,8 @@ const spaces = document.querySelectorAll('.box');
 const turn = {
   player: 'X',
   numPlays: 0,
-  toggle: () => turn.player = turn.player === 'X' ? 'O' : 'X'
+  toggle: () => turn.player = turn.player === 'X' ? 'O' : 'X',
+  winner: null
 };
 
 const boardState = {};
@@ -71,10 +72,14 @@ const isWinner = (lastPlay) => {
 
 const endGame = (winner) => {
   document.removeEventListener('click', checkBoardClick);
+  reset.innerText = 'Play Again!'
   if (winner) {
     console.log(`${turn.player} wins!`);
+    turn.start = turn.player;
   } else {
     console.log('It\'s a tie!');
+    changePlayer()
+    turn.start = turn.player;
   }
 }
 //
@@ -95,13 +100,14 @@ const updateGameState = (e) => {
 }
 
 const resetGameState = () => {
-  turn.player = 'X';
+  turn.player = turn.start;
   turn.numPlays = 0;
   for (let key in boardState) {
     boardState[key] = null;
   }
   spaces.forEach(space => space.innerText = '');
   document.addEventListener('click', checkBoardClick);
+  reset.innerText = 'Reset Game';
 }
 
 // View (Event Listeners)
