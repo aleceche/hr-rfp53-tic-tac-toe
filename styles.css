@@ -13,8 +13,8 @@ body {
 
 #board {
   border-collapse: collapse;
-  margin-bottom: 4em;
-  margin-top: 4em;
+  margin-bottom: 2em;
+  margin-top: 2em;
 }
 
 #reset, .box {
@@ -23,12 +23,18 @@ body {
 
 #reset {
   border-radius: 5px;
+  margin-top: 3em;
   padding: 1em 5em;
 }
 
 #reset:hover {
   background-color: gray;
   color: white;
+}
+
+#player {
+  font-weight: bold;
+  font-style: italic;
 }
 
 .row {

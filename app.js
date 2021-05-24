@@ -4,6 +4,7 @@ const reset = document.querySelector('#reset');
 const spaces = document.querySelectorAll('.box');
 const xScore = document.querySelector('#x-score');
 const oScore = document.querySelector('#o-score');
+const player = document.querySelector('#player');
 
 // Game state parameters
 const turn = {
@@ -35,6 +36,16 @@ const updateBoard = (e, space) => {
 
 const changePlayer = () => {
   turn.toggle();
+}
+
+const updateMessage = () => {
+  if (turn.winner) {
+    message.innerHTML = `Game Over. ${turn.winner} wins!`;
+  } else if (turn.numPlays === 9) {
+    message.innerHTML = 'Game Over. It\'s a tie.';
+  } else {
+    player.innerText = turn.player;
+  }
 }
 
 // could probably combine these?
@@ -74,13 +85,12 @@ const isWinner = (lastPlay) => {
   }
 }
 
-const endGame = (winner) => {
+const endGame = () => {
   document.removeEventListener('click', checkBoardClick);
   reset.innerText = 'Play Again!'
-  if (winner) {
-    console.log(`${turn.player} wins!`);
+  if (turn.winner) {
     turn.start = turn.player;
-    if (winner === 'X') {
+    if (turn.winner === 'X') {
       turn.playerOneScore += 1;
       xScore.innerText = turn.playerOneScore;
     } else {
@@ -88,7 +98,6 @@ const endGame = (winner) => {
       oScore.innerText = turn.playerTwoScore;
     }
   } else {
-    console.log('It\'s a tie!');
     changePlayer()
     turn.start = turn.player;
   }
@@ -100,11 +109,12 @@ const updateGameState = (e) => {
   let space = e.target.getAttribute('value');
   if (!boardState[space]) {
     updateBoard(e, space);
-    let winner = isWinner(space)
-    if(winner || turn.numPlays === 9){
-      endGame(winner);
+    turn.winner = isWinner(space)
+    if(turn.winner || turn.numPlays === 9){
+      endGame();
     }
     changePlayer();
+    updateMessage();
   } else {
     window.alert('That space is already occupied. Please choose another.');
   }
@@ -119,6 +129,7 @@ const resetGameState = () => {
   spaces.forEach(space => space.innerText = '');
   document.addEventListener('click', checkBoardClick);
   reset.innerText = 'Reset Game';
+  message.innerHTML = `<span id='player'>${turn.start}</span>'s turn. Choose a space.`;
 }
 
 // View (Event Listeners)
