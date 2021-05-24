@@ -1,4 +1,9 @@
 // Model
+// Selectors for board and spaces
+const reset = document.querySelector('#reset');
+const spaces = document.querySelectorAll('.box');
+
+// Game state parameters
 const turn = {
   player: 'X',
   numPlays: 0,
@@ -7,9 +12,10 @@ const turn = {
 
 const boardState = {};
 for (let i = 1; i < 10; i++) {
-  boardState[i] = '';
+  boardState[i] = null;
 }
 
+// Helper functions for updating board
 const checkBoardClick = (e) => {
   if (e.target.matches('.box')) {
     updateGameState(e);
@@ -26,6 +32,7 @@ const changePlayer = () => {
   turn.toggle();
 }
 
+// could probably combine these?
 checkHorizontalWin = (lastPlay) => {
   let matches = 0;
   let rowPlayed = Math.floor((lastPlay - 1) / 3);
@@ -53,25 +60,33 @@ checkDiagonalWin = (lastPlay) => {
           (boardState[3] === boardState[5] && boardState[3] === boardState[7]));
 }
 
-const checkForWinner = (lastPlay) => {
+const isWinner = (lastPlay) => {
   if (turn.numPlays < 5) {
-    return false;
+    return null;
   } else {
-    return checkHorizontalWin(lastPlay) || checkVerticalWin(lastPlay) || checkDiagonalWin(lastPlay);
+    let winningMove = checkHorizontalWin(lastPlay) || checkVerticalWin(lastPlay) || checkDiagonalWin(lastPlay);
+    return winningMove ? turn.player : null;
   }
-  console.log('tie game');
 }
+
+const endGame = (winner) => {
+  document.removeEventListener('click', checkBoardClick);
+  if (winner) {
+    console.log(`${turn.player} wins!`);
+  } else {
+    console.log('It\'s a tie!');
+  }
+}
+//
 
 // Controller (Event Handlers)
 const updateGameState = (e) => {
-  // need to find a better way to get value of box
-  let space = e.target.innerText
-  console.log(e.target.getAttribute('value'));
-  if (boardState[space] === '') {
+  let space = e.target.getAttribute('value');
+  if (!boardState[space]) {
     updateBoard(e, space);
-    if(checkForWinner(space)){
-      document.removeEventListener('click', checkBoardClick);
-      console.log(`${turn.player} wins!`);
+    let winner = isWinner(space)
+    if(winner || turn.numPlays === 9){
+      endGame(winner);
     }
     changePlayer();
   } else {
@@ -79,5 +94,17 @@ const updateGameState = (e) => {
   }
 }
 
+const resetGameState = () => {
+  turn.player = 'X';
+  turn.numPlays = 0;
+  for (let key in boardState) {
+    boardState[key] = null;
+  }
+  spaces.forEach(space => space.innerText = '');
+  document.addEventListener('click', checkBoardClick);
+}
+
 // View (Event Listeners)
 document.addEventListener('click', checkBoardClick);
+reset.addEventListener('click', resetGameState);
+
