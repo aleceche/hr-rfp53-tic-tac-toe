@@ -1,12 +1,16 @@
 // Model
-// Selectors for board and spaces
+// Selectors for board, spaces, and scores
 const reset = document.querySelector('#reset');
 const spaces = document.querySelectorAll('.box');
+const xScore = document.querySelector('#x-score');
+const oScore = document.querySelector('#o-score');
 
 // Game state parameters
 const turn = {
   player: 'X',
   numPlays: 0,
+  playerOneScore: 0,
+  playerTwoScore: 0,
   toggle: () => turn.player = turn.player === 'X' ? 'O' : 'X',
   winner: null
 };
@@ -76,6 +80,13 @@ const endGame = (winner) => {
   if (winner) {
     console.log(`${turn.player} wins!`);
     turn.start = turn.player;
+    if (winner === 'X') {
+      turn.playerOneScore += 1;
+      xScore.innerText = turn.playerOneScore;
+    } else {
+      turn.playerTwoScore += 1;
+      oScore.innerText = turn.playerTwoScore;
+    }
   } else {
     console.log('It\'s a tie!');
     changePlayer()
