@@ -6,7 +6,7 @@ const xScore = document.querySelector('#x-score');
 const oScore = document.querySelector('#o-score');
 const xName = document.querySelector('#x-name');
 const oName = document.querySelector('#o-name');
-const player = document.querySelector('#player');
+const message = document.querySelector('#message');
 
 // Game state parameters
 const turn = {
@@ -42,11 +42,12 @@ const changePlayer = () => {
 
 const updateMessage = () => {
   if (turn.winner) {
-    message.innerHTML = `Game Over. ${turn.winner === 'X' ? playerOne : playerTwo} wins!`;
+    message.innerText = `Game Over. ${turn.winner === 'X' ? playerOne : playerTwo} wins!`;
   } else if (turn.numPlays === 9) {
-    message.innerHTML = 'Game Over. It\'s a tie.';
+    message.innerText = 'Game Over. It\'s a tie.';
   } else {
-    player.innerText = turn.player === 'X' ? playerOne : playerTwo;
+    currentPlayer = turn.player === 'X' ? playerOne : playerTwo;
+    message.innerText = `${currentPlayer}\'s turn. Choose a space.`;
   }
 }
 
@@ -91,7 +92,6 @@ const endGame = () => {
   document.removeEventListener('click', checkBoardClick);
   reset.innerText = 'Play Again!'
   if (turn.winner) {
-    turn.start = turn.player;
     if (turn.winner === 'X') {
       turn.playerOneScore += 1;
       xScore.innerText = turn.playerOneScore;
@@ -100,8 +100,7 @@ const endGame = () => {
       oScore.innerText = turn.playerTwoScore;
     }
   } else {
-    changePlayer()
-    turn.start = turn.player;
+    changePlayer();
   }
 }
 //
@@ -114,8 +113,9 @@ const updateGameState = (e) => {
     turn.winner = isWinner(space)
     if(turn.winner || turn.numPlays === 9){
       endGame();
+    } else {
+      changePlayer();
     }
-    changePlayer();
     updateMessage();
   } else {
     window.alert('That space is already occupied. Please choose another.');
@@ -123,7 +123,7 @@ const updateGameState = (e) => {
 }
 
 const resetGameState = () => {
-  turn.player = turn.start;
+  turn.winner = null;
   turn.numPlays = 0;
   for (let key in boardState) {
     boardState[key] = null;
@@ -131,7 +131,9 @@ const resetGameState = () => {
   spaces.forEach(space => space.innerText = '');
   document.addEventListener('click', checkBoardClick);
   reset.innerText = 'Reset Game';
-  message.innerHTML = `<span id='player'>${turn.start === 'X' ? playerOne : playerTwo}</span>'s turn. Choose a space.`;
+  console.log(turn);
+  startingPlayer = turn.player === 'X' ? playerOne : playerTwo;
+  message.innerText = `${startingPlayer}\'s turn. Choose a space.`;
 }
 
 // View (Event Listeners and player names)
@@ -145,4 +147,8 @@ const playerOne = window.prompt('Player One (X), Please Enter Your Name: ') || '
 const playerTwo = window.prompt('Player Two (O), Please Enter Your Name: ') || 'O';
 xName.innerText = playerOne;
 oName.innerText = playerTwo;
-player.innerText = playerOne;
+message.innerText = `${playerOne}\'s turn. Choose a space.`;
+
+const initialize = () => {
+
+}
